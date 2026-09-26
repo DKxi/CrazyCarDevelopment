@@ -1,63 +1,55 @@
----
-references:
-  - "File: /CrazyCar/app.py"
----
 classDiagram
-    class CrazyCarApp {
-        +load_css()
-        +random_username()
-        +init_state()
-        +logo_html()
-        +car_card(car_id, car)
-        +lobby()
-        +race()
-    }
     class SessionState {
-        +username: str
-        +screen: str
-        +car_id: str
-        +sponsor: str
+        username
+        screen
+        car_id
+        sponsor
+        control_mode
+        highest_level_unlocked
+        race_id
+        last_event
+    }
+    class Level {
+        id
+        number
+        name
+        subtitle
+        road_width
+        points
+        world_width
+        world_height
+        time_limit
+        difficulty
+        steering_modifier
     }
     class Car {
-        +name: str
-        +color: str
-        +accent: str
-        +speed: str
-        +handling: str
-        +emoji: str
+        name
+        color
+        accent
+        speed
+        handling
+        unlock_level
     }
-    class Track {
-        +name: str
-        +full: str
-        +width: int
-        +points: list
+    class Sponsor {
+        name
+        short_name
+        color
+        logo
+        logo_path
     }
-    class BrowserGame {
-        +buildRoad()
-        +draw()
-        +loop()
-        +reset()
-        +next()
-        +pointDistance()
-        +modal()
-        +updateTimer()
-        +resumeGame()
+    class BrowserRace {
+        loadLevel()
+        resetCurrentLevel()
+        updateJoystickInput()
+        setKeyboardInput()
+        updatePhysics()
+        drawCar()
+        openPauseMenu()
+        completeLevel()
+        emitEvent()
     }
-    class RaceConfig {
-        +username: str
-        +sponsor: str
-        +car: Car
-        +timeLimits: list
-    }
-    class RACE_HTML {
-        +template: str
-    }
-
-    CrazyCarApp --> SessionState
-    CrazyCarApp --> Car
-    CrazyCarApp --> Track
-    CrazyCarApp --> BrowserGame
-    CrazyCarApp --> RaceConfig
-    BrowserGame --> Track
-    BrowserGame --> RACE_HTML
-    RaceConfig --> Car
+    SessionState --> Car
+    SessionState --> Sponsor
+    BrowserRace --> Level
+    BrowserRace --> Sponsor
+    BrowserRace --> SessionState : completion and exit events

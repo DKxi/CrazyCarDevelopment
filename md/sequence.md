@@ -1,47 +1,31 @@
+# CrazyCar sequence
+
+Current implementation; source is `app.py`, `game_config.py` and `game/`.
+
 ```mermaid
----
-references:
-  - "File: /CrazyCar/app.py"
----
 sequenceDiagram
-    participant U as User
-    participant A as Streamlit App
-    participant S as Streamlit Session State
-    participant B as Browser
-    participant J as JS Game Component
-
-    U->>A: Open app.py via streamlit run
-    A->>A: load_css()
-    A->>S: init_state()
-    S-->>A: username, screen, car_id, sponsor
-    A->>A: decide screen
-    alt lobby
-        A->>U: render Lobby UI
-        U->>A: select car / sponsor
-        A->>S: update car_id / sponsor
-        U->>A: click START CHAMPIONSHIP
-        A->>S: screen = "race"
-        A->>A: rerun app
+    actor Player
+    participant Lobby as Streamlit lobby
+    participant Session as Session state
+    participant Race as V1 browser component
+    Player->>Lobby: Select car, sponsor, control mode, unlocked level
+    Lobby->>Session: Store selections and new race ID
+    Lobby->>Race: Render configuration with stable component key
+    Race->>Race: Ready handshake and START RACE dialog
+    Player->>Race: Start gesture, keyboard or pointer input
+    loop requestAnimationFrame without Python reruns
+        Race->>Race: Unified input to physics to rendering
     end
-    alt race
-        A->>B: components.html(RACE_HTML)
-        A->>B: pass config JSON
-        B->>J: initialize canvas + audio
-        J->>J: buildRoad(), draw(), loop()
-        U->>B: keydown / keyup events
-        B->>J: update input state
-        J->>J: physics, steering, timer checks
-        alt off track / timeout
-            J->>B: show result modal
-            B->>J: user selects action
-            J->>J: reset() or next()
-        else finish line
-            J->>B: show progress modal
-            B->>J: user continues or restarts
-        end
-        U->>A: click EXIT TO LOBBY
-        A->>S: screen = "lobby"
-        A->>A: rerun app
-    end
-
+    Player->>Race: Pause
+    Race->>Race: Freeze timer, position, speed; reset controls
+    Player->>Race: Resume or restart current level
+    Race->>Race: Resume exactly or reset current level
+    Race->>Session: Completion event with race ID and sequence ID
+    Session->>Session: Clamp and monotonically update unlocked level
+    Session->>Race: Rerender; existing iframe does not reinitialize
+    Player->>Race: NEXT LEVEL or RACE AGAIN
+    Race->>Race: Load next configured track or first track
+    Player->>Race: Return to lobby
+    Race->>Session: Lobby event including last completed level
+    Session->>Lobby: Render automatically unlocked cars
 ```

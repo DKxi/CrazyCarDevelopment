@@ -1,50 +1,21 @@
+# CrazyCar architecture
+
+Current implementation; source is `app.py`, `game_config.py` and `game/`.
+
 ```mermaid
----
-references:
-  - "File: /CrazyCar/app.py"
----
-flowchart TB
-    subgraph Streamlit App
-        A[app.py] --> B[initialize state]
-        A --> C[load CSS from style.css]
-        A --> D[render lobby or race screen]
-        D --> E{session_state.screen == lobby}
-        E -->|yes| F[Lobby UI]
-        E -->|no| G[Race View]
-    end
-
-    subgraph Lobby Screen
-        F --> H[car_card selection]
-        F --> I[sponsor buttons]
-        F --> J[START CHAMPIONSHIP button]
-    end
-
-    subgraph Race View
-        G --> K[render race shell + header]
-        G --> L[embed RACE_HTML into components.html]
-        G --> M[pass config JSON to browser JS]
-        G --> N[EXIT TO LOBBY button]
-    end
-
-    subgraph Browser Game Component
-        L --> O["canvas rendering"]
-        O --> P["buildRoad() / track points"]
-        O --> Q["draw() loop"]
-        Q --> R["physics + speed + steering"]
-        Q --> S["collision & timeout checks"]
-        Q --> T["modal result flow"]
-        Q --> U["requestAnimationFrame(loop)"]
-        L --> V["input handlers: keydown / keyup"]
-        M --> W["username, sponsor, car, timeLimits"]
-    end
-
-    subgraph Data & State
-        Q --> X[tracks metadata]
-        B --> Y[st.session_state: username, screen, car_id, sponsor]
-        W --> Y
-    end
-
-    N --> E
-    J --> E
-
+flowchart TD
+    App[Streamlit app.py] --> Lobby[Lobby and locked-car dialogs]
+    App --> Session[Session progress and selections]
+    Config[game_config.py: levels cars sponsors] --> App
+    Lobby --> Mode[Control mode selection]
+    Mode --> Race[Local V1 canvas component]
+    Race --> Keyboard[Keyboard input]
+    Race --> Joystick[Pointer joystick]
+    Keyboard --> Input[Unified analog input state]
+    Joystick --> Input
+    Input --> Physics[Original driving physics and ordered checkpoints]
+    Physics --> Render[Canvas and sponsor roof logo]
+    Physics --> Results[Pause failure and completion menus]
+    Results -->|completion or lobby event| Session
+    Session -->|unlock cars at configured level| Lobby
 ```

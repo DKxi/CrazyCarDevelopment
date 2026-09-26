@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="stylesheet" href="race.css"></head>
+<body><main id="wrap">
+<header class="hud"><button id="pause" aria-label="Pause game">Ⅱ</button><div><div class="label" id="level"></div><strong id="track"></strong></div><div class="identity"><span id="driver"></span><span id="sponsor"></span></div><div class="timer"><span class="label">TIME</span><strong id="timeValue"></strong></div><button id="sound" aria-label="Enable sound">♪ OFF</button></header>
+<div id="stage"><canvas id="game" tabindex="0" aria-label="Race track. Arrow keys drive, P pauses, R restarts."></canvas><div id="rotate">Rotate your phone for the best racing experience.</div></div>
+<footer><div id="keyboardHint">↑ ACCELERATE · ↓ REVERSE · ← → STEER · R RESTART · P PAUSE</div><div id="mobileControls" hidden><div id="joystick" role="group" aria-label="Driving joystick: up accelerate, down reverse, left and right steer"><div id="stick"></div></div><div>DRAG JOYSTICK<br>TO DRIVE<br><small>↑ GO · ↓ REVERSE</small></div></div></footer>
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalText" hidden><div class="panel"><div class="label" id="modalLabel"></div><h1 id="modalTitle"></h1><p id="modalText"></p><div id="modalActions"></div></div></div>
+</main><script src="race.js"></script></body></html>
