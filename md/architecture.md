@@ -1,0 +1,50 @@
+```mermaid
+---
+references:
+  - "File: /CrazyCar/app.py"
+---
+flowchart TB
+    subgraph Streamlit App
+        A[app.py] --> B[initialize state]
+        A --> C[load CSS from style.css]
+        A --> D[render lobby or race screen]
+        D --> E{session_state.screen == lobby}
+        E -->|yes| F[Lobby UI]
+        E -->|no| G[Race View]
+    end
+
+    subgraph Lobby Screen
+        F --> H[car_card selection]
+        F --> I[sponsor buttons]
+        F --> J[START CHAMPIONSHIP button]
+    end
+
+    subgraph Race View
+        G --> K[render race shell + header]
+        G --> L[embed RACE_HTML into components.html]
+        G --> M[pass config JSON to browser JS]
+        G --> N[EXIT TO LOBBY button]
+    end
+
+    subgraph Browser Game Component
+        L --> O["canvas rendering"]
+        O --> P["buildRoad() / track points"]
+        O --> Q["draw() loop"]
+        Q --> R["physics + speed + steering"]
+        Q --> S["collision & timeout checks"]
+        Q --> T["modal result flow"]
+        Q --> U["requestAnimationFrame(loop)"]
+        L --> V["input handlers: keydown / keyup"]
+        M --> W["username, sponsor, car, timeLimits"]
+    end
+
+    subgraph Data & State
+        Q --> X[tracks metadata]
+        B --> Y[st.session_state: username, screen, car_id, sponsor]
+        W --> Y
+    end
+
+    N --> E
+    J --> E
+
+```

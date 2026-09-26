@@ -1,0 +1,66 @@
+```mermaid
+---
+references:
+  - "File: /CrazyCar/app.py"
+---
+classDiagram
+    class CrazyCarApp {
+        +load_css()
+        +random_username()
+        +init_state()
+        +logo_html()
+        +car_card(car_id, car)
+        +lobby()
+        +race()
+    }
+    class SessionState {
+        +username: str
+        +screen: str
+        +car_id: str
+        +sponsor: str
+    }
+    class Car {
+        +name: str
+        +color: str
+        +accent: str
+        +speed: str
+        +handling: str
+        +emoji: str
+    }
+    class Track {
+        +name: str
+        +full: str
+        +width: int
+        +points: list
+    }
+    class BrowserGame {
+        +buildRoad()
+        +draw()
+        +loop()
+        +reset()
+        +next()
+        +pointDistance()
+        +modal()
+        +updateTimer()
+        +resumeGame()
+    }
+    class RaceConfig {
+        +username: str
+        +sponsor: str
+        +car: Car
+        +timeLimits: list
+    }
+    class RACE_HTML {
+        +template: str
+    }
+
+    CrazyCarApp --> SessionState
+    CrazyCarApp --> Car
+    CrazyCarApp --> Track
+    CrazyCarApp --> BrowserGame
+    CrazyCarApp --> RaceConfig
+    BrowserGame --> Track
+    BrowserGame --> RACE_HTML
+    RaceConfig --> Car
+
+```
